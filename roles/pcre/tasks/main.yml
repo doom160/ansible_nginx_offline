@@ -1,0 +1,31 @@
+---
+- name: Copy pcre source to tmp
+  copy:
+    src: pcre-{{ version }}
+    dest: tmp
+
+- name: Running ./configure for pcre
+  command: 'autoreconf -f -i'
+  args:
+    chdir: tmp/pcre-{{ version }}
+
+- name: Running ./configure for pcre
+  command: './configure'
+  args:
+    chdir: tmp/pcre-{{ version }}
+
+- name: Running make for pcre
+  command: 'make'
+  args:
+    chdir: tmp/pcre-{{ version }}
+
+- name: Running make install for pcre
+  become: yes
+  command: 'make install'
+  args:
+    chdir: tmp/pcre-{{ version }}
+
+- name: Clean pcre path
+  file:
+    state: absent
+    path: tmp/pcre-{{ version }}
