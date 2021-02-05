@@ -1,0 +1,31 @@
+---
+- name: Copy zlib source to tmp
+  copy:
+    src: zlib-{{ version }}
+    dest: tmp
+
+- name: Running ./configure for zlib
+  command: 'autoreconf -f -i'
+  args:
+    chdir: tmp/zlib-{{ version }}
+
+- name: Running ./configure for zlib
+  command: './configure'
+  args:
+    chdir: tmp/zlib-{{ version }}
+
+- name: Running make for zlib
+  command: 'make'
+  args:
+    chdir: tmp/zlib-{{ version }}
+
+- name: Running make install for zlib
+  become: yes
+  command: 'make install'
+  args:
+    chdir: tmp/zlib-{{ version }}
+
+- name: Clean zlib path
+  file:
+    state: absent
+    path: tmp/zlib-{{ version }}
