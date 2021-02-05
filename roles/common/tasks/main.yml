@@ -1,4 +1,5 @@
 - name: Update all packages
   become: yes
   apt:
+    name: automake
     update_cache: yes
