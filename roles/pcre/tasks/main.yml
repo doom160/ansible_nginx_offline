@@ -1,31 +1,35 @@
 ---
-- name: Copy pcre source to tmp
-  copy:
-    src: pcre-{{ version }}
-    dest: tmp
+- name: Extract pcre-{{ pcre_version }}.tar.gz into /usr/local
+  ansible.builtin.unarchive:
+    src: pcre-{{ pcre_version }}.tar.gz
+    dest: /usr/local
 
-- name: Running ./configure for pcre
+- name: Set permission to for pcre for configure
+  ansible.builtin.file:
+    mode: '0750'
+    path: /usr/local/pcre-{{ pcre_version }}/configure
+
+- name: autoreconf ./configure for pcre
+  become: yes
   command: 'autoreconf -f -i'
   args:
-    chdir: tmp/pcre-{{ version }}
+    chdir: /usr/local/pcre-{{ pcre_version }}
 
 - name: Running ./configure for pcre
+  become: yes
   command: './configure'
   args:
-    chdir: tmp/pcre-{{ version }}
+    chdir: /usr/local/pcre-{{ pcre_version }}
 
 - name: Running make for pcre
+  become: yes
   command: 'make'
   args:
-    chdir: tmp/pcre-{{ version }}
+    chdir: /usr/local/pcre-{{ pcre_version }}
 
 - name: Running make install for pcre
   become: yes
   command: 'make install'
   args:
-    chdir: tmp/pcre-{{ version }}
-
-- name: Clean pcre path
-  file:
-    state: absent
-    path: tmp/pcre-{{ version }}
+    chdir: /usr/local/pcre-{{ pcre_version }}
+    

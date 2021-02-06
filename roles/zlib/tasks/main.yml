@@ -1,31 +1,29 @@
 ---
-- name: Copy zlib source to tmp
-  copy:
-    src: zlib-{{ version }}
-    dest: tmp
+- name: Extract zlib-{{ zlib_version }}.tar.gz into /usr/local
+  ansible.builtin.unarchive:
+    src: zlib-{{ zlib_version }}.tar.gz
+    dest: /usr/local
+  
+- name: Set permission to for zlib for configure
+  ansible.builtin.file:
+    mode: '0750'
+    path: /usr/local/zlib-{{ zlib_version }}/configure
 
 - name: Running ./configure for zlib
-  command: 'autoreconf -f -i'
-  args:
-    chdir: tmp/zlib-{{ version }}
-
-- name: Running ./configure for zlib
+  become: yes
   command: './configure'
   args:
-    chdir: tmp/zlib-{{ version }}
+    chdir: /usr/local/zlib-{{ zlib_version }}
 
 - name: Running make for zlib
+  become: yes
   command: 'make'
   args:
-    chdir: tmp/zlib-{{ version }}
+    chdir: /usr/local/zlib-{{ zlib_version }}
 
 - name: Running make install for zlib
   become: yes
   command: 'make install'
   args:
-    chdir: tmp/zlib-{{ version }}
+    chdir: /usr/local/zlib-{{ zlib_version }}
 
-- name: Clean zlib path
-  file:
-    state: absent
-    path: tmp/zlib-{{ version }}

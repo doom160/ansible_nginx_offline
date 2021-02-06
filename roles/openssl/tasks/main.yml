@@ -1,31 +1,29 @@
---
-- name: Copy openssl source to tmp
-  copy:
-    src: openssl-{{ version }}
-    dest: tmp
+---
+- name: Extract openssl-{{ openssl_version }}.tar.gz into /usr/local
+  ansible.builtin.unarchive:
+    src: openssl-{{ openssl_version }}.tar.gz
+    dest: /usr/local
 
-- name: Running ./configure for openssl
-  command: 'autoreconf -f -i'
-  args:
-    chdir: tmp/openssl-{{ version }}
+- name: Set permission to for openssl for configure
+  ansible.builtin.file:
+    mode: '0750'
+    path: /usr/local/openssl-{{ openssl_version }}/config
 
-- name: Running ./configure for openssl
-  command: './configure'
+- name: Running ./config for openssl
+  become: yes
+  command: './config'
   args:
-    chdir: tmp/openssl-{{ version }}
+    chdir: /usr/local/openssl-{{ openssl_version }}
 
 - name: Running make for openssl
+  become: yes
   command: 'make'
   args:
-    chdir: tmp/openssl-{{ version }}
+    chdir: /usr/local/openssl-{{ openssl_version }}
 
 - name: Running make install for openssl
   become: yes
   command: 'make install'
   args:
-    chdir: tmp/openssl-{{ version }}
+    chdir: /usr/local/openssl-{{ openssl_version }}
 
-- name: Clean openssl path
-  file:
-    state: absent
-    path: tmp/openssl-{{ version }}
