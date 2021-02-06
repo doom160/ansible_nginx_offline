@@ -1,38 +1,59 @@
 ---
-- name: Extract nginx-{{ nginx_version }}.tar.gz into /usr/local
-  ansible.builtin.unarchive:
-    src: nginx-{{ nginx_version }}.tar.gz
-    dest: /usr/local
+#- name: Extract nginx-{{ nginx_version }}.tar.gz into /usr/local
+#  ansible.builtin.unarchive:
+#    src: nginx-{{ nginx_version }}.tar.gz
+#    dest: /usr/local
+#
+#- name: Set permission to for nginx for configure
+#  ansible.builtin.file:
+#    mode: '0750'
+#    path: /usr/local/nginx-{{ nginx_version }}/configure
+#
+#- name: Running ./configure for nginx
+#  become: yes
+#  command: >
+#    ./configure --sbin-path=/usr/local/nginx/nginx
+#    --conf-path=/usr/local/nginx/nginx.conf
+#    --pid-path=/usr/local/nginx/nginx.pid
+#    --with-http_ssl_module
+#    --with-stream
+#    --with-pcre=/usr/local/pcre-{{ pcre_version }}
+#    --with-zlib=/usr/local/zlib-{{ zlib_version }}
+#    --without-http_empty_gif_module
+#  args:
+#    chdir: /usr/local/nginx-{{ nginx_version }}
+#
+#- name: Running make for nginx
+#  become: yes
+#  command: 'make'
+#  args:
+#    chdir: /usr/local/nginx-{{ nginx_version }}
+#
+#- name: Running make install for nginx
+#  become: yes
+#  command: 'make install'
+#  args:
+#    chdir: /usr/local/nginx-{{ nginx_version }}
+#
+#- name: Copy a "nginx" file on the remote machine to perform start on boot
+#  become: yes
+#  ansible.builtin.copy:
+#    src: /usr/local/nginx/nginx
+#    dest: /etc/init.d/
+#    remote_src: yes
 
+- name:  Copy a "nginx" file on the remote machine to perform start on boot
+  ansible.builtin.copy:
+    content: |
+      #! /bin/sh
+      sudo /usr/local/nginx/nginx
+    dest: /etc/init.d/nginx
+    owner: root
+    group: root
+    mode: '0755'
 
-- name: Set permission to for nginx for configure
-  ansible.builtin.file:
-    mode: '0750'
-    path: /usr/local/nginx-{{ nginx_version }}/configure
-
-- name: Running ./configure for nginx
+- name: Running start nginx on boot
   become: yes
-  command: >
-    ./configure --sbin-path=/usr/local/nginx/nginx
-    --conf-path=/usr/local/nginx/nginx.conf
-    --pid-path=/usr/local/nginx/nginx.pid
-    --with-http_ssl_module
-    --with-stream
-    --with-pcre=/usr/local/pcre-{{ pcre_version }}
-    --with-zlib=/usr/local/zlib-{{ zlib_version }}
-    --without-http_empty_gif_module
-  args:
-    chdir: /usr/local/nginx-{{ nginx_version }}
+  command: 'update-rc.d nginx defaults'
 
-- name: Running make for nginx
-  become: yes
-  command: 'make'
-  args:
-    chdir: /usr/local/nginx-{{ nginx_version }}
-
-- name: Running make install for nginx
-  become: yes
-  command: 'make install'
-  args:
-    chdir: /usr/local/nginx-{{ nginx_version }}
 

@@ -1,5 +1,5 @@
 ---
-- hosts: webserver
+- hosts: localhost
   vars:
     pcre_version: 8.44
     openssl_version: 1.1.1g
