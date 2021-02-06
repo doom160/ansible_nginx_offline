@@ -8,7 +8,7 @@
 1. Assuming all remote servers are running on ubuntu 64-bit OS
 2. Executing host should have default ssh access, and no password authentication is require
 3. It should have the basic OS packages
-4. Installation guide are mostly referred from [official nginx guide] (https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/#sources) with slight modification
+4. Installation guide are mostly referred from [official Nginx installation guide](https://docs.nginx.com/nginx/admin-guide/installing-nginx/installing-nginx-open-source/#sources) with slight modification
 
 ## Run
 ### Local run
