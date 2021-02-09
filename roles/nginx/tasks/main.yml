@@ -35,13 +35,6 @@
   args:
     chdir: /usr/local/nginx-{{ nginx_version }}
 
-- name: Copy a "nginx" file on the remote machine to perform start on boot
-  become: yes
-  ansible.builtin.copy:
-    src: /usr/local/nginx/nginx
-    dest: /etc/init.d/
-    remote_src: yes
-
 - name:  Copy a "nginx" file on the remote machine to perform start on boot
   ansible.builtin.copy:
     content: |
