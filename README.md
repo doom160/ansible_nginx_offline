@@ -18,3 +18,6 @@
 1. Update `hosts` file for the list of webserver
 2. Run following commands\
 `sudo ansible-playbook -i hosts nginx.yml`
+
+## Result
+![Ngingx](screenshots/nginx.jpg?raw=true "Nginx")
